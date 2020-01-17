@@ -14,7 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
-    <PackageReference Include="Net.Http.OData" Version="5.0.0-preview229" />
+    <PackageReference Include="Net.Http.OData" Version="5.0.0-preview20200117.6" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
