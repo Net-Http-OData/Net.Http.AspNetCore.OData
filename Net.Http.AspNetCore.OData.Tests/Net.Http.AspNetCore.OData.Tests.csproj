@@ -31,6 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <DotNetCliToolReference Include="dotnet-reportgenerator-cli" Version="4.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Net.Http.AspNetCore.OData\Net.Http.AspNetCore.OData.csproj" />
   </ItemGroup>
 
