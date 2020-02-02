@@ -11,6 +11,7 @@ trigger:
   paths:
     exclude:
       - .editorconfig
+      - build.ps1
       - README.md
       - stylecop.json
 
@@ -20,6 +21,8 @@ pool:
 variables:
   buildConfiguration: 'Release'
   buildVersion: '0.0.0'
+  projectPath: '.\Net.Http.AspNetCore.OData\Net.Http.AspNetCore.OData.csproj'
+  testWorkingDirectory: 'Net.Http.AspNetCore.OData.Tests'
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
@@ -33,7 +36,7 @@ steps:
 #  inputs:
 #    command: 'custom'
 #    custom: 'reportgenerator'
-#    workingDirectory: 'Net.Http.AspNetCore.OData.Tests'
+#    workingDirectory: $(testWorkingDirectory)
 #    projects: '**/*Tests.csproj'
 #    arguments: '"-reports:TestResults\coverage.cobertura.xml" "-targetdir:TestResults\html" -reporttypes:HTML;'
 
@@ -41,7 +44,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $projVersion = ([xml](Get-Content ".\Net.Http.AspNetCore.OData\Net.Http.AspNetCore.OData.csproj")) | Select-Xml -XPath "//Project/PropertyGroup[1]/Version"
+      $projVersion = ([xml](Get-Content "$(projectPath)")) | Select-Xml -XPath "//Project/PropertyGroup[1]/Version"
 
       Write-Host "##vso[task.setvariable variable=buildVersion]$projVersion"
 
