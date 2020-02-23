@@ -2,14 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Net.Http.AspNetCore.OData.snk</AssemblyOriginatorKeyFile>
     <Version>5.0.0</Version>
     <Authors>Trevor Pilley and Project Contributors</Authors>
-    <Description>A .NET Standard library which uses Net.Http.OData with an implementation for ASP.NET Core MVC.</Description>
+    <Description>A .NET Standard library which uses Net.Http.OData with an implementation for ASP.NET Core.</Description>
     <Copyright>Copyright 2020 Project Contributors</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageTags>OData Parser</PackageTags>
+    <PackageTags>OData Parser ASP.NET Core</PackageTags>
     <PackageReleaseNotes>See https://github.com/Net-Http-OData/Net.Http.AspNetCore.OData/releases for a summary of changes made in this release of the package.</PackageReleaseNotes>
     <NeutralLanguage>en-GB</NeutralLanguage>
     <RepositoryUrl>https://github.com/Net-Http-OData/Net.Http.AspNetCore.OData</RepositoryUrl>
@@ -30,7 +31,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Net.Http.OData" Version="5.0.0-preview20200120.2" />
+    <PackageReference Include="Net.Http.OData" Version="5.0.0-preview20200221.2" />
     <PackageReference Include="SecurityCodeScan" Version="3.4.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -39,6 +40,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>
