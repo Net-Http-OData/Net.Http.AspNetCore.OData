@@ -15,17 +15,17 @@ namespace Net.Http.AspNetCore.OData.Tests.Metadata
 
             var controller = new ODataMetadataController();
 
-            IActionResult response = controller.Get();
+            IActionResult result = controller.Get();
 
-            Assert.IsType<ContentResult>(response);
+            Assert.IsType<ContentResult>(result);
 
-            var contentResult = (ContentResult)response;
+            var contentResult = (ContentResult)result;
 
-            string result = contentResult.Content;
+            string content = contentResult.Content;
 
-            Assert.NotNull(result);
+            Assert.NotNull(content);
 
-            var resultXml = XDocument.Parse(result);
+            var resultXml = XDocument.Parse(content);
 
             Assert.Equal("Edmx", resultXml.Root.Name.LocalName);
         }

@@ -21,9 +21,11 @@ namespace Net.Http.AspNetCore.OData.Tests
             var httpContextItems = new Dictionary<object, object>();
 
             var mockHttpContext = new Mock<HttpContext>();
-            mockHttpContext.Setup(x => x.Items).Returns(httpContextItems);
-
             var mockHttpRequest = new Mock<HttpRequest>();
+
+            mockHttpContext.Setup(x => x.Items).Returns(httpContextItems);
+            mockHttpContext.Setup(x => x.Request).Returns(mockHttpRequest.Object);
+
             mockHttpRequest.SetupAllProperties();
             mockHttpRequest.Setup(x => x.HttpContext).Returns(mockHttpContext.Object);
 
