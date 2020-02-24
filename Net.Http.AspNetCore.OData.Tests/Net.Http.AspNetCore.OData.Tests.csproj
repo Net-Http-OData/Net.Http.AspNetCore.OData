@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>7.3</LangVersion>
     <IsPackable>false</IsPackable>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Net.Http.AspNetCore.OData.snk</AssemblyOriginatorKeyFile>
@@ -9,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Moq" Version="4.13.1" />
     <PackageReference Include="Net.Http.OData" Version="5.0.0-preview20200223.4" />
     <PackageReference Include="System.Text.Json" Version="4.7.1" />
@@ -29,11 +30,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="dotnet-reportgenerator-cli" Version="4.4.5" />
+    <None Remove="TestResults\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\Net.Http.AspNetCore.OData.snk" Link="Net.Http.AspNetCore.OData.snk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="dotnet-reportgenerator-cli" Version="4.4.7" />
   </ItemGroup>
 
   <ItemGroup>
