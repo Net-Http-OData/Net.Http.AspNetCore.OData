@@ -45,7 +45,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
         internal static void EnsureEDM()
         {
-            EntityDataModelBuilder entityDataModelBuilder = new EntityDataModelBuilder(StringComparer.OrdinalIgnoreCase)
+            var entityDataModelBuilder = new EntityDataModelBuilder(StringComparer.OrdinalIgnoreCase)
                 .RegisterEntitySet<Category>("Categories", x => x.Name, Capabilities.Insertable | Capabilities.Updatable | Capabilities.Deletable)
                 .RegisterEntitySet<Customer>("Customers", x => x.CompanyName, Capabilities.Updatable)
                 .RegisterEntitySet<Employee>("Employees", x => x.Id)
