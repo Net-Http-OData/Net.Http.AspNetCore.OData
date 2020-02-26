@@ -14,7 +14,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         [Fact]
         public void OnException_DoesNotSet_Result_If_Exception_IsNot_ODataException()
         {
-            var httpRequest = TestHelper.CreateHttpRequest("/OData/Products");
+            var httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products");
 
             var exceptionContext = new ExceptionContext(new ActionContext(httpRequest.HttpContext, new RouteData(), new ActionDescriptor()), new IFilterMetadata[0])
             {
@@ -32,7 +32,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         [Fact]
         public void OnException_Sets_Result_If_Exception_Is_ODataException()
         {
-            var httpRequest = TestHelper.CreateHttpRequest("/OData/Products");
+            var httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products");
 
             var exceptionContext = new ExceptionContext(new ActionContext(httpRequest.HttpContext, new RouteData(), new ActionDescriptor()), new IFilterMetadata[0])
             {

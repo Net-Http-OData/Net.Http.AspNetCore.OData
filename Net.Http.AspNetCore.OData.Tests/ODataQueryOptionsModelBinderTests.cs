@@ -13,7 +13,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products?$count=true");
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products?$count=true");
 
             var mockModelBindingContext = new Mock<ModelBindingContext>();
             mockModelBindingContext.Setup(x => x.HttpContext).Returns(httpRequest.HttpContext);

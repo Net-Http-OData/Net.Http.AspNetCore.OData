@@ -15,7 +15,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         [Trait("Category", "Unit")]
         public void IsODataMetadataRequest_False(string path)
         {
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest(path);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest(path);
 
             Assert.False(httpRequest.IsODataMetadataRequest());
         }
@@ -24,7 +24,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         [Trait("Category", "Unit")]
         public void IsODataMetadataRequest_True()
         {
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/odata/$metadata");
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/odata/$metadata");
 
             Assert.True(httpRequest.IsODataMetadataRequest());
         }
@@ -35,7 +35,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         [Trait("Category", "Unit")]
         public void IsODataRequest_False(string path)
         {
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest(path);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest(path);
 
             Assert.False(httpRequest.IsODataRequest());
         }
@@ -46,7 +46,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         [Trait("Category", "Unit")]
         public void IsODataRequest_True(string path)
         {
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest(path);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest(path);
 
             Assert.True(httpRequest.IsODataRequest());
         }
@@ -57,7 +57,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products?$count=true&$expand=Category&$filter=Name eq 'Milk'&$format=json&$orderby=Name&$search=blue OR green&$select=Name,Price&$top=25");
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products?$count=true&$expand=Category&$filter=Name eq 'Milk'&$format=json&$orderby=Name&$search=blue OR green&$select=Name,Price&$top=25");
 
             ODataQueryOptions queryOptions = new ODataQueryOptions(
                 httpRequest.QueryString.Value,
@@ -75,7 +75,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products?$top=25");
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products?$top=25");
 
             ODataQueryOptions queryOptions = new ODataQueryOptions(
                 httpRequest.QueryString.Value,
@@ -91,7 +91,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         [Trait("Category", "Unit")]
         public void ResolveODataContext_ReturnsContext_IfMetadataIsFull()
         {
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData", ODataMetadataLevel.Full);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData", ODataMetadataLevel.Full);
 
             string odataContext = httpRequest.ResolveODataContext();
 
@@ -102,7 +102,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         [Trait("Category", "Unit")]
         public void ResolveODataContext_ReturnsContext_IfMetadataIsMinimal()
         {
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData", ODataMetadataLevel.Minimal);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData", ODataMetadataLevel.Minimal);
 
             string odataContext = httpRequest.ResolveODataContext();
 
@@ -113,7 +113,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         [Trait("Category", "Unit")]
         public void ResolveODataContext_ReturnsNull_IfMetadataIsNone()
         {
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData", ODataMetadataLevel.None);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData", ODataMetadataLevel.None);
 
             string odataContext = httpRequest.ResolveODataContext();
 
@@ -126,7 +126,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products('Milk')", ODataMetadataLevel.Full);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')", ODataMetadataLevel.Full);
 
             string odataContext = httpRequest.ResolveODataContext<string>(EntityDataModel.Current.EntitySets["Products"]);
 
@@ -139,7 +139,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products('Milk')", ODataMetadataLevel.Minimal);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')", ODataMetadataLevel.Minimal);
 
             string odataContext = httpRequest.ResolveODataContext<string>(EntityDataModel.Current.EntitySets["Products"]);
 
@@ -152,7 +152,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products('Milk')", ODataMetadataLevel.None);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')", ODataMetadataLevel.None);
 
             string odataContext = httpRequest.ResolveODataContext<string>(EntityDataModel.Current.EntitySets["Products"]);
 
@@ -165,7 +165,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Orders(12345)/Name", ODataMetadataLevel.Full);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Orders(12345)/Name", ODataMetadataLevel.Full);
 
             string odataContext = httpRequest.ResolveODataContext(EntityDataModel.Current.EntitySets["Orders"], 12345, "Name");
 
@@ -178,7 +178,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Orders(12345)/Name", ODataMetadataLevel.Minimal);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Orders(12345)/Name", ODataMetadataLevel.Minimal);
 
             string odataContext = httpRequest.ResolveODataContext(EntityDataModel.Current.EntitySets["Orders"], 12345, "Name");
 
@@ -191,7 +191,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Orders(12345)/Name", ODataMetadataLevel.None);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Orders(12345)/Name", ODataMetadataLevel.None);
 
             string odataContext = httpRequest.ResolveODataContext(EntityDataModel.Current.EntitySets["Orders"], 12345, "Name");
 
@@ -204,7 +204,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products('Milk')/Name", ODataMetadataLevel.Full);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')/Name", ODataMetadataLevel.Full);
 
             string odataContext = httpRequest.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"], "Milk", "Name");
 
@@ -217,7 +217,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products('Milk')/Name", ODataMetadataLevel.Minimal);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')/Name", ODataMetadataLevel.Minimal);
 
             string odataContext = httpRequest.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"], "Milk", "Name");
 
@@ -230,7 +230,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products('Milk')/Name", ODataMetadataLevel.None);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')/Name", ODataMetadataLevel.None);
 
             string odataContext = httpRequest.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"], "Milk", "Name");
 
@@ -243,7 +243,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products", ODataMetadataLevel.Full);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products", ODataMetadataLevel.Full);
 
             string odataContext = httpRequest.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"]);
 
@@ -256,7 +256,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products", ODataMetadataLevel.Minimal);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products", ODataMetadataLevel.Minimal);
 
             string odataContext = httpRequest.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"]);
 
@@ -269,7 +269,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products", ODataMetadataLevel.None);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products", ODataMetadataLevel.None);
 
             string odataContext = httpRequest.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"]);
 
@@ -282,7 +282,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products?$select=*", ODataMetadataLevel.Full);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products?$select=*", ODataMetadataLevel.Full);
 
             EntitySet entitySet = EntityDataModel.Current.EntitySets["Products"];
 
@@ -302,7 +302,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products?$select=*", ODataMetadataLevel.Minimal);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products?$select=*", ODataMetadataLevel.Minimal);
 
             EntitySet entitySet = EntityDataModel.Current.EntitySets["Products"];
 
@@ -322,7 +322,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products?$select=*", ODataMetadataLevel.None);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products?$select=*", ODataMetadataLevel.None);
 
             EntitySet entitySet = EntityDataModel.Current.EntitySets["Products"];
 
@@ -342,7 +342,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products?$select=Name,Price", ODataMetadataLevel.Full);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products?$select=Name,Price", ODataMetadataLevel.Full);
 
             EntitySet entitySet = EntityDataModel.Current.EntitySets["Products"];
 
@@ -362,7 +362,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products?$select=Name,Price", ODataMetadataLevel.Minimal);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products?$select=Name,Price", ODataMetadataLevel.Minimal);
 
             EntitySet entitySet = EntityDataModel.Current.EntitySets["Products"];
 
@@ -382,7 +382,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products?$select=Name,Price", ODataMetadataLevel.None);
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products?$select=Name,Price", ODataMetadataLevel.None);
 
             EntitySet entitySet = EntityDataModel.Current.EntitySets["Products"];
 
@@ -402,7 +402,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Orders");
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Orders");
 
             string odataContext = httpRequest.ResolveODataId(EntityDataModel.Current.EntitySets["Orders"], 12345);
 
@@ -415,7 +415,7 @@ namespace Net.Http.AspNetCore.OData.Tests
         {
             TestHelper.EnsureEDM();
 
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products");
+            HttpRequest httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products");
 
             string odataContext = httpRequest.ResolveODataId(EntityDataModel.Current.EntitySets["Products"], "Milk");
 

@@ -18,7 +18,7 @@ namespace Net.Http.AspNetCore.OData.Tests.Metadata
 
             var controller = new ServiceDocumentODataController
             {
-                ControllerContext = new ControllerContext { HttpContext = TestHelper.CreateHttpRequest("/OData", ODataMetadataLevel.Full).HttpContext },
+                ControllerContext = new ControllerContext { HttpContext = TestHelper.CreateODataHttpRequest("/OData", ODataMetadataLevel.Full).HttpContext },
             };
 
             IActionResult result = controller.Get();
@@ -53,7 +53,7 @@ namespace Net.Http.AspNetCore.OData.Tests.Metadata
 
             var controller = new ServiceDocumentODataController
             {
-                ControllerContext = new ControllerContext { HttpContext = TestHelper.CreateHttpRequest("/OData", ODataMetadataLevel.Minimal).HttpContext },
+                ControllerContext = new ControllerContext { HttpContext = TestHelper.CreateODataHttpRequest("/OData", ODataMetadataLevel.Minimal).HttpContext },
             };
 
             IActionResult result = controller.Get();
@@ -88,7 +88,7 @@ namespace Net.Http.AspNetCore.OData.Tests.Metadata
 
             var controller = new ServiceDocumentODataController
             {
-                ControllerContext = new ControllerContext { HttpContext = TestHelper.CreateHttpRequest("/OData", ODataMetadataLevel.None).HttpContext },
+                ControllerContext = new ControllerContext { HttpContext = TestHelper.CreateODataHttpRequest("/OData", ODataMetadataLevel.None).HttpContext },
             };
 
             IActionResult result = controller.Get();
