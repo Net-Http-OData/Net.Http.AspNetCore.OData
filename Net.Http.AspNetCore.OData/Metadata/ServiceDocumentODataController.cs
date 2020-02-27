@@ -35,13 +35,17 @@ namespace Net.Http.AspNetCore.OData.Metadata
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Get()
         {
-            ODataRequestOptions requestOptions = Request.ReadODataRequestOptions();
             string odataContext = Request.ResolveODataContext();
-            IEnumerable<ServiceDocumentItem> serviceDocumentItems = ServiceDocumentProvider.Create(EntityDataModel.Current, requestOptions);
+            ODataRequestOptions odataRequestOptions = Request.ReadODataRequestOptions();
+            IEnumerable<ServiceDocumentItem> serviceDocumentItems = ServiceDocumentProvider.Create(EntityDataModel.Current, odataRequestOptions);
 
-            var serviceDocumentResponse = new ODataResponseContent(serviceDocumentItems, odataContext);
+            var odataResponseContent = new ODataResponseContent
+            {
+                Context = odataContext,
+                Value = serviceDocumentItems,
+            };
 
-            return Ok(serviceDocumentResponse);
+            return Ok(odataResponseContent);
         }
     }
 }

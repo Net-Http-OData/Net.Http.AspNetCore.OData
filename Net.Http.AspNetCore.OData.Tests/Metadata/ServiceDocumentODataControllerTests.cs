@@ -8,8 +8,6 @@ namespace Net.Http.AspNetCore.OData.Tests.Metadata
 {
     public class ServiceDocumentODataControllerTests
     {
-        private static readonly System.Text.Json.JsonSerializerOptions s_jsonSerializerOptions = new System.Text.Json.JsonSerializerOptions { IgnoreNullValues = true, PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase };
-
         [Fact]
         [Trait("Category", "Unit")]
         public void WhenFullMetadataIsRequested_TheEntitySetUrlIsRelative_AndTheContextUriIsSet()
@@ -37,12 +35,6 @@ namespace Net.Http.AspNetCore.OData.Tests.Metadata
             Assert.Null(odataResponseContent.Count);
             Assert.Null(odataResponseContent.NextLink);
             Assert.NotNull(odataResponseContent.Value);
-
-            string serviceDocument = JsonSerializer.Serialize(odataResponseContent, s_jsonSerializerOptions);
-
-            Assert.Equal(
-                "{\"@odata.context\":\"https://services.odata.org/OData/$metadata\",\"value\":[{\"kind\":\"EntitySet\",\"name\":\"Categories\",\"url\":\"Categories\"},{\"kind\":\"EntitySet\",\"name\":\"Customers\",\"url\":\"Customers\"},{\"kind\":\"EntitySet\",\"name\":\"Employees\",\"url\":\"Employees\"},{\"kind\":\"EntitySet\",\"name\":\"Managers\",\"url\":\"Managers\"},{\"kind\":\"EntitySet\",\"name\":\"Orders\",\"url\":\"Orders\"},{\"kind\":\"EntitySet\",\"name\":\"Products\",\"url\":\"Products\"}]}",
-                serviceDocument);
         }
 
         [Fact]
@@ -72,12 +64,6 @@ namespace Net.Http.AspNetCore.OData.Tests.Metadata
             Assert.Null(odataResponseContent.Count);
             Assert.Null(odataResponseContent.NextLink);
             Assert.NotNull(odataResponseContent.Value);
-
-            string serviceDocument = JsonSerializer.Serialize(odataResponseContent, s_jsonSerializerOptions);
-
-            Assert.Equal(
-                "{\"@odata.context\":\"https://services.odata.org/OData/$metadata\",\"value\":[{\"kind\":\"EntitySet\",\"name\":\"Categories\",\"url\":\"Categories\"},{\"kind\":\"EntitySet\",\"name\":\"Customers\",\"url\":\"Customers\"},{\"kind\":\"EntitySet\",\"name\":\"Employees\",\"url\":\"Employees\"},{\"kind\":\"EntitySet\",\"name\":\"Managers\",\"url\":\"Managers\"},{\"kind\":\"EntitySet\",\"name\":\"Orders\",\"url\":\"Orders\"},{\"kind\":\"EntitySet\",\"name\":\"Products\",\"url\":\"Products\"}]}",
-                serviceDocument);
         }
 
         [Fact]
@@ -107,12 +93,6 @@ namespace Net.Http.AspNetCore.OData.Tests.Metadata
             Assert.Null(odataResponseContent.Count);
             Assert.Null(odataResponseContent.NextLink);
             Assert.NotNull(odataResponseContent.Value);
-
-            string serviceDocument = JsonSerializer.Serialize(odataResponseContent, s_jsonSerializerOptions);
-
-            Assert.Equal(
-                "{\"value\":[{\"kind\":\"EntitySet\",\"name\":\"Categories\",\"url\":\"https://services.odata.org/OData/Categories\"},{\"kind\":\"EntitySet\",\"name\":\"Customers\",\"url\":\"https://services.odata.org/OData/Customers\"},{\"kind\":\"EntitySet\",\"name\":\"Employees\",\"url\":\"https://services.odata.org/OData/Employees\"},{\"kind\":\"EntitySet\",\"name\":\"Managers\",\"url\":\"https://services.odata.org/OData/Managers\"},{\"kind\":\"EntitySet\",\"name\":\"Orders\",\"url\":\"https://services.odata.org/OData/Orders\"},{\"kind\":\"EntitySet\",\"name\":\"Products\",\"url\":\"https://services.odata.org/OData/Products\"}]}",
-                serviceDocument);
         }
     }
 }

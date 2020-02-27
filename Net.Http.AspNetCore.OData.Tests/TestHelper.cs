@@ -9,6 +9,12 @@ namespace Net.Http.AspNetCore.OData.Tests
 {
     internal static class TestHelper
     {
+        internal static System.Text.Json.JsonSerializerOptions JsonSerializerOptions => new System.Text.Json.JsonSerializerOptions
+        {
+            IgnoreNullValues = true,
+            PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+        };
+
         /// <summary>
         /// Creates an <see cref="HttpRequest"/> (without ODataRequestOptions) for the URI 'https://services.odata.org/{path}'.
         /// </summary>
@@ -50,7 +56,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
         internal static void EnsureEDM()
         {
-            var entityDataModelBuilder = new EntityDataModelBuilder(StringComparer.OrdinalIgnoreCase)
+            EntityDataModelBuilder entityDataModelBuilder = new EntityDataModelBuilder(StringComparer.OrdinalIgnoreCase)
                 .RegisterEntitySet<Category>("Categories", x => x.Name, Capabilities.Insertable | Capabilities.Updatable | Capabilities.Deletable)
                 .RegisterEntitySet<Customer>("Customers", x => x.CompanyName, Capabilities.Updatable)
                 .RegisterEntitySet<Employee>("Employees", x => x.Id)
