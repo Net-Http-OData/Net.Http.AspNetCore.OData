@@ -32,7 +32,7 @@ steps:
   displayName: 'dotnet test'
 
 - script: reportgenerator "-reports:TestResults\coverage.cobertura.xml" "-targetdir:TestResults\Coverage" -reporttypes:HTML;
-    workingDirectory: $(testWorkingDirectory)
+  workingDirectory: $(testWorkingDirectory)
   displayName: 'reportgenerator'
 
 - task: PublishCodeCoverageResults@1
