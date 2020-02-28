@@ -58,7 +58,7 @@ namespace Net.Http.AspNetCore.OData.Tests
             TestHelper.EnsureEDM();
 
             HttpRequest httpRequest = TestHelper.CreateODataHttpRequest(
-            	"/OData/Products?$count=true&$expand=Category&$filter=Name eq 'Milk'&$format=json&$orderby=Name&$search=blue OR green&$select=Name,Price&$top=25");
+                "/OData/Products?$count=true&$expand=Category&$filter=Name eq 'Milk'&$format=json&$orderby=Name&$search=blue OR green&$select=Name,Price&$top=25");
 
             ODataQueryOptions queryOptions = new ODataQueryOptions(
                 httpRequest.QueryString.Value,
