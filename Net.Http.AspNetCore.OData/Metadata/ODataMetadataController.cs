@@ -38,6 +38,13 @@ namespace Net.Http.AspNetCore.OData.Metadata
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Get()
         {
+            EnsureMetadata();
+
+            return Content(s_metadataXml, "application/xml", Encoding.UTF8);
+        }
+
+        private static void EnsureMetadata()
+        {
             if (s_metadataXml is null)
             {
                 using (var stringWriter = new Utf8StringWriter())
@@ -48,8 +55,6 @@ namespace Net.Http.AspNetCore.OData.Metadata
                     s_metadataXml = stringWriter.ToString();
                 }
             }
-
-            return Content(s_metadataXml, "application/xml", Encoding.UTF8);
         }
     }
 }

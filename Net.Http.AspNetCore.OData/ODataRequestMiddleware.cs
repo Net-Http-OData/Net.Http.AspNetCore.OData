@@ -81,12 +81,12 @@ namespace Net.Http.AspNetCore.OData
 
             await _next(httpContext).ConfigureAwait(false);
 
-            if (httpContext.Request?.IsODataRequest() == true)
+            if (requestOptions != null)
             {
                 if (!httpContext.Request.IsODataMetadataRequest())
                 {
-                    // TODO: verify this is the correct way to do this...
 #pragma warning disable CA1308 // Normalize strings to uppercase
+                    // TODO: verify this is the correct way to do this...
                     httpContext.Response.Headers["Content-Type"] += ";odata.metadata=" + requestOptions.MetadataLevel.ToString().ToLowerInvariant();
 #pragma warning restore CA1308 // Normalize strings to uppercase
                 }
