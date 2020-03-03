@@ -72,7 +72,7 @@ namespace Net.Http.AspNetCore.OData
                     httpContext.Response.ContentType = "application/json";
                     httpContext.Response.StatusCode = (int)exception.StatusCode;
 
-                    string result = JsonSerializer.Serialize(ODataErrorContent.Create(exception), s_jsonSerializerOptions);
+                    string result = JsonSerializer.Serialize(exception.ToODataErrorContent(), s_jsonSerializerOptions);
                     await httpContext.Response.WriteAsync(result, Encoding.UTF8).ConfigureAwait(false);
 
                     return;

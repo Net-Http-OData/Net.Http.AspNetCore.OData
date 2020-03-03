@@ -279,6 +279,6 @@ namespace Net.Http.AspNetCore.OData
         /// <param name="exception">The <see cref="ODataException"/> indicating the error.</param>
         /// <returns>An <see cref="IActionResult"/> representing the OData error.</returns>
         internal static IActionResult CreateODataErrorResult(this HttpRequest request, ODataException exception)
-            => new ObjectResult(ODataErrorContent.Create(exception)) { StatusCode = (int)exception?.StatusCode };
+            => new ObjectResult(exception.ToODataErrorContent()) { StatusCode = (int)exception.StatusCode };
     }
 }
