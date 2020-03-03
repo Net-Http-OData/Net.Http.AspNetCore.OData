@@ -26,7 +26,8 @@ namespace Net.Http.AspNetCore.OData.Tests
             var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
             await middleware.InvokeAsync(httpContext);
 
-            NameValueHeaderValue metadataParameter = new ResponseHeaders(httpContext.Response.Headers).ContentType.Parameters.SingleOrDefault(x => x.Name == ODataMetadataLevelExtensions.HeaderName);
+            NameValueHeaderValue metadataParameter =
+                new ResponseHeaders(httpContext.Response.Headers).ContentType.Parameters.SingleOrDefault(x => x.Name == ODataMetadataLevelExtensions.HeaderName);
 
             Assert.Null(metadataParameter);
         }
@@ -48,10 +49,6 @@ namespace Net.Http.AspNetCore.OData.Tests
             httpContext.Response.Body.Position = 0;
 
             string bodyResult = new StreamReader(httpContext.Response.Body, Encoding.UTF8).ReadToEnd();
-
-            Assert.Equal(
-                "{\"error\":{\"code\":\"415\",\"message\":\"A supported MIME type could not be found that matches the acceptable MIME types for the request. The supported type(s) 'application/json;odata.metadata=none, application/json;odata.metadata=minimal, application/json, text/plain' do not match any of the acceptable MIME types 'application/xml'.\"}}",
-                bodyResult);
 
             ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
 
@@ -77,10 +74,6 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             string bodyResult = new StreamReader(httpContext.Response.Body, Encoding.UTF8).ReadToEnd();
 
-            Assert.Equal(
-                "{\"error\":{\"code\":\"400\",\"message\":\"odata.metadata 'full' is not supported by this service, please use 'none' or 'minimal'.\"}}",
-                bodyResult);
-
             ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
 
             Assert.Equal("400", odataErrorContent.Error.Code);
@@ -104,10 +97,6 @@ namespace Net.Http.AspNetCore.OData.Tests
             httpContext.Response.Body.Position = 0;
 
             string bodyResult = new StreamReader(httpContext.Response.Body, Encoding.UTF8).ReadToEnd();
-
-            Assert.Equal(
-                "{\"error\":{\"code\":\"400\",\"message\":\"If specified, the OData-Isolation must be 'Snapshot'.\"}}",
-                bodyResult);
 
             ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
 
@@ -133,10 +122,6 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             string bodyResult = new StreamReader(httpContext.Response.Body, Encoding.UTF8).ReadToEnd();
 
-            Assert.Equal(
-                "{\"error\":{\"code\":\"400\",\"message\":\"If specified, the OData-MaxVersion header must be a valid OData version supported by this service between version 4.0 and 4.0.\"}}",
-                bodyResult);
-
             ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
 
             Assert.Equal("400", odataErrorContent.Error.Code);
@@ -161,10 +146,6 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             string bodyResult = new StreamReader(httpContext.Response.Body, Encoding.UTF8).ReadToEnd();
 
-            Assert.Equal(
-                "{\"error\":{\"code\":\"400\",\"message\":\"If specified, the odata.metadata value in the Accept header must be 'none', 'minimal' or 'full'.\"}}",
-                bodyResult);
-
             ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
 
             Assert.Equal("400", odataErrorContent.Error.Code);
@@ -188,10 +169,6 @@ namespace Net.Http.AspNetCore.OData.Tests
             httpContext.Response.Body.Position = 0;
 
             string bodyResult = new StreamReader(httpContext.Response.Body, Encoding.UTF8).ReadToEnd();
-
-            Assert.Equal(
-                "{\"error\":{\"code\":\"400\",\"message\":\"If specified, the OData-Version header must be a valid OData version supported by this service between version 4.0 and 4.0.\"}}",
-                bodyResult);
 
             ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
 
