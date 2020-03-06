@@ -23,7 +23,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             HttpContext httpContext = httpRequest.HttpContext;
 
-            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
+            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
             await middleware.InvokeAsync(httpContext);
 
             NameValueHeaderValue metadataParameter =
@@ -41,7 +41,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             HttpContext httpContext = httpRequest.HttpContext;
 
-            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
+            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
             await middleware.InvokeAsync(httpContext);
 
             Assert.Equal((int)HttpStatusCode.UnsupportedMediaType, httpContext.Response.StatusCode);
@@ -58,38 +58,14 @@ namespace Net.Http.AspNetCore.OData.Tests
 
         [Fact]
         [Trait("Category", "Unit")]
-        public async Task InvokeAsync_ReturnsODataErrorContent_ForFullMetadataLevel()
-        {
-            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products");
-            httpRequest.Headers["Accept"] = "application/json;odata.metadata=full";
-
-            HttpContext httpContext = httpRequest.HttpContext;
-
-            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
-            await middleware.InvokeAsync(httpContext);
-
-            Assert.Equal((int)HttpStatusCode.BadRequest, httpContext.Response.StatusCode);
-
-            httpContext.Response.Body.Position = 0;
-
-            string bodyResult = new StreamReader(httpContext.Response.Body, Encoding.UTF8).ReadToEnd();
-
-            ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
-
-            Assert.Equal("400", odataErrorContent.Error.Code);
-            Assert.Equal("odata.metadata 'full' is not supported by this service, please use 'none' or 'minimal'.", odataErrorContent.Error.Message);
-        }
-
-        [Fact]
-        [Trait("Category", "Unit")]
         public async Task InvokeAsync_ReturnsODataErrorContent_ForInvalidIsolationLevel()
         {
             HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products");
-            httpRequest.Headers.Add(ODataHeaderNames.ODataIsolation, "ReadCommitted");
+            httpRequest.Headers.Add(ODataRequestHeaderNames.ODataIsolation, "ReadCommitted");
 
             HttpContext httpContext = httpRequest.HttpContext;
 
-            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
+            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
             await middleware.InvokeAsync(httpContext);
 
             Assert.Equal((int)HttpStatusCode.BadRequest, httpContext.Response.StatusCode);
@@ -109,11 +85,11 @@ namespace Net.Http.AspNetCore.OData.Tests
         public async Task InvokeAsync_ReturnsODataErrorContent_ForInvalidMaxVersion()
         {
             HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products");
-            httpRequest.Headers.Add(ODataHeaderNames.ODataMaxVersion, "3.0");
+            httpRequest.Headers.Add(ODataRequestHeaderNames.ODataMaxVersion, "3.0");
 
             HttpContext httpContext = httpRequest.HttpContext;
 
-            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
+            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
             await middleware.InvokeAsync(httpContext);
 
             Assert.Equal((int)HttpStatusCode.BadRequest, httpContext.Response.StatusCode);
@@ -133,11 +109,11 @@ namespace Net.Http.AspNetCore.OData.Tests
         public async Task InvokeAsync_ReturnsODataErrorContent_ForInvalidMetadataLevel()
         {
             HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products");
-            httpRequest.Headers["Accept"] = "application/json;odata.metadata=all"; ;
+            httpRequest.Headers["Accept"] = "application/json;odata.metadata=all";
 
             HttpContext httpContext = httpRequest.HttpContext;
 
-            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
+            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
             await middleware.InvokeAsync(httpContext);
 
             Assert.Equal((int)HttpStatusCode.BadRequest, httpContext.Response.StatusCode);
@@ -154,14 +130,38 @@ namespace Net.Http.AspNetCore.OData.Tests
 
         [Fact]
         [Trait("Category", "Unit")]
-        public async Task InvokeAsync_ReturnsODataErrorContent_ForInvalidVersion()
+        public async Task InvokeAsync_ReturnsODataErrorContent_ForIsolationSnapshot()
         {
             HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products");
-            httpRequest.Headers.Add(ODataHeaderNames.ODataVersion, "3.0");
+            httpRequest.Headers.Add(ODataRequestHeaderNames.ODataIsolation, "Snapshot");
 
             HttpContext httpContext = httpRequest.HttpContext;
 
-            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
+            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
+            await middleware.InvokeAsync(httpContext);
+
+            Assert.Equal((int)HttpStatusCode.PreconditionFailed, httpContext.Response.StatusCode);
+
+            httpContext.Response.Body.Position = 0;
+
+            string bodyResult = new StreamReader(httpContext.Response.Body, Encoding.UTF8).ReadToEnd();
+
+            ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
+
+            Assert.Equal("412", odataErrorContent.Error.Code);
+            Assert.Equal($"{ODataRequestHeaderNames.ODataIsolation} 'Snapshot' is not supported by this service.", odataErrorContent.Error.Message);
+        }
+
+        [Fact]
+        [Trait("Category", "Unit")]
+        public async Task InvokeAsync_ReturnsODataErrorContent_ForMetadataLevelFull()
+        {
+            HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products");
+            httpRequest.Headers["Accept"] = "application/json;odata.metadata=full";
+
+            HttpContext httpContext = httpRequest.HttpContext;
+
+            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
             await middleware.InvokeAsync(httpContext);
 
             Assert.Equal((int)HttpStatusCode.BadRequest, httpContext.Response.StatusCode);
@@ -173,7 +173,7 @@ namespace Net.Http.AspNetCore.OData.Tests
             ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
 
             Assert.Equal("400", odataErrorContent.Error.Code);
-            Assert.Equal("If specified, the OData-Version header must be a valid OData version supported by this service between version 4.0 and 4.0.", odataErrorContent.Error.Message);
+            Assert.Equal("odata.metadata 'full' is not supported by this service, the metadata levels supported by this service are 'none, minimal'.", odataErrorContent.Error.Message);
         }
 
         public class WhenCalling_InvokeAsync_AndTheResponseHasNoContent
@@ -186,7 +186,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
                 HttpContext httpContext = httpRequest.HttpContext;
 
-                var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
+                var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
                 middleware.InvokeAsync(httpContext).Wait();
 
                 _httpResponse = httpContext.Response;
@@ -207,7 +207,7 @@ namespace Net.Http.AspNetCore.OData.Tests
             [Trait("Category", "Unit")]
             public void TheODataVersionHeaderIsSetInTheResponse()
             {
-                Assert.True(_httpResponse.Headers.TryGetValue(ODataHeaderNames.ODataVersion, out StringValues value));
+                Assert.True(_httpResponse.Headers.TryGetValue(ODataResponseHeaderNames.ODataVersion, out StringValues value));
                 Assert.Equal(ODataVersion.MaxVersion.ToString(), value);
             }
         }
@@ -221,12 +221,18 @@ namespace Net.Http.AspNetCore.OData.Tests
             {
                 HttpRequest httpRequest = TestHelper.CreateHttpRequest("/OData/Products");
                 httpRequest.Headers["Accept"] = "application/json;odata.metadata=none";
-                httpRequest.Headers.Add(ODataHeaderNames.ODataIsolation, "Snapshot");
-                httpRequest.Headers.Add(ODataHeaderNames.ODataVersion, "4.0");
+                httpRequest.Headers.Add(ODataRequestHeaderNames.ODataIsolation, "Snapshot");
+                httpRequest.Headers.Add(ODataRequestHeaderNames.ODataMaxVersion, "4.0");
+
+                var odataServiceOptions = new ODataServiceOptions(
+                    ODataVersion.MinVersion,
+                    ODataVersion.MaxVersion,
+                    new[] { ODataIsolationLevel.Snapshot },
+                    new[] { "application/json", "text/plain" });
 
                 HttpContext httpContext = httpRequest.HttpContext;
 
-                var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
+                var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, odataServiceOptions);
                 middleware.InvokeAsync(httpContext).Wait();
 
                 _httpResponse = httpContext.Response;
@@ -285,8 +291,8 @@ namespace Net.Http.AspNetCore.OData.Tests
             [Trait("Category", "Unit")]
             public void TheODataVersionHeaderIsSetInTheResponse()
             {
-                Assert.True(_httpResponse.Headers.TryGetValue(ODataHeaderNames.ODataVersion, out StringValues headerValue));
-                Assert.Equal(ODataVersion.MaxVersion.ToString(), headerValue);
+                Assert.True(_httpResponse.Headers.TryGetValue(ODataResponseHeaderNames.ODataVersion, out StringValues headerValue));
+                Assert.Equal(ODataVersion.OData40.ToString(), headerValue);
             }
         }
 
@@ -301,7 +307,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
                 HttpContext httpContext = httpRequest.HttpContext;
 
-                var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
+                var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
                 middleware.InvokeAsync(httpContext).Wait();
 
                 _httpResponse = httpContext.Response;
@@ -360,7 +366,7 @@ namespace Net.Http.AspNetCore.OData.Tests
             [Trait("Category", "Unit")]
             public void TheODataVersionHeaderIsSetInTheResponse()
             {
-                Assert.True(_httpResponse.Headers.TryGetValue(ODataHeaderNames.ODataVersion, out StringValues headerValue));
+                Assert.True(_httpResponse.Headers.TryGetValue(ODataResponseHeaderNames.ODataVersion, out StringValues headerValue));
                 Assert.Equal(ODataVersion.MaxVersion.ToString(), headerValue);
             }
         }
@@ -375,7 +381,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
                 HttpContext httpContext = httpRequest.HttpContext;
 
-                var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask);
+                var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
                 middleware.InvokeAsync(httpContext).Wait();
 
                 _httpResponse = httpContext.Response;
@@ -400,7 +406,7 @@ namespace Net.Http.AspNetCore.OData.Tests
             [Trait("Category", "Unit")]
             public void TheODataVersionHeaderIsNotSet()
             {
-                Assert.False(_httpResponse.Headers.ContainsKey(ODataHeaderNames.ODataVersion));
+                Assert.False(_httpResponse.Headers.ContainsKey(ODataResponseHeaderNames.ODataVersion));
             }
         }
     }

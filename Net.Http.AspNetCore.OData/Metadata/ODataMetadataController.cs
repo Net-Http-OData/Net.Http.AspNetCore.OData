@@ -49,7 +49,7 @@ namespace Net.Http.AspNetCore.OData.Metadata
             {
                 using (var stringWriter = new Utf8StringWriter())
                 {
-                    XDocument metadataDocument = XmlMetadataProvider.Create(EntityDataModel.Current, ODataServiceOptions.Default);
+                    XDocument metadataDocument = XmlMetadataProvider.Create(EntityDataModel.Current, ODataServiceOptions.Current);
                     metadataDocument.Save(stringWriter);
 
                     s_metadataXml = stringWriter.ToString();

@@ -15,6 +15,13 @@ namespace Net.Http.AspNetCore.OData.Tests
             PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
         };
 
+        internal static ODataServiceOptions ODataServiceOptions
+            => new ODataServiceOptions(
+                ODataVersion.MinVersion,
+                ODataVersion.MaxVersion,
+                new[] { ODataIsolationLevel.None },
+                new[] { "application/json", "text/plain" });
+
         /// <summary>
         /// Creates an <see cref="HttpRequest"/> (without ODataRequestOptions) for the URI 'https://services.odata.org/{path}'.
         /// </summary>
@@ -56,6 +63,8 @@ namespace Net.Http.AspNetCore.OData.Tests
 
         internal static void EnsureEDM()
         {
+            ODataServiceOptions.Current = ODataServiceOptions;
+
             EntityDataModelBuilder entityDataModelBuilder = new EntityDataModelBuilder(StringComparer.OrdinalIgnoreCase)
                 .RegisterEntitySet<Category>("Categories", x => x.Name, Capabilities.Insertable | Capabilities.Updatable | Capabilities.Deletable)
                 .RegisterEntitySet<Customer>("Customers", x => x.CompanyName, Capabilities.Updatable)

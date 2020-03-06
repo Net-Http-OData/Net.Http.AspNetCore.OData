@@ -11,6 +11,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using Microsoft.AspNetCore.Builder;
+using Net.Http.OData;
 
 namespace Net.Http.AspNetCore.OData
 {
@@ -25,6 +26,14 @@ namespace Net.Http.AspNetCore.OData
         /// <param name="builder">The <see cref="IApplicationBuilder"/> to add the middleware to.</param>
         /// <returns>The <see cref="IApplicationBuilder"/> with the added <see cref="ODataRequestMiddleware"/>.</returns>
         public static IApplicationBuilder UseOData(this IApplicationBuilder builder)
-            => builder.UseMiddleware<ODataRequestMiddleware>();
+        {
+            ODataServiceOptions.Current = new ODataServiceOptions(
+                ODataVersion.MinVersion,
+                ODataVersion.MaxVersion,
+                new[] { ODataIsolationLevel.None },
+                new[] { "application/json", "text/plain" });
+
+            return builder.UseMiddleware<ODataRequestMiddleware>(ODataServiceOptions.Current);
+        }
     }
 }
