@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ApplicationBuilderExtensions.cs" company="Project Contributors">
+// <copyright file="ODataApplicationBuilderExtensions.cs" company="Project Contributors">
 // Copyright Project Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +16,9 @@ using Net.Http.OData;
 namespace Net.Http.AspNetCore.OData
 {
     /// <summary>
-    /// Extension methods for <see cref="IApplicationBuilder"/>.
+    /// Extension methods for <see cref="IApplicationBuilder"/> to add OData to the request execution pipeline.
     /// </summary>
-    public static class ApplicationBuilderExtensions
+    public static class ODataApplicationBuilderExtensions
     {
         /// <summary>
         /// Adds a <see cref="ODataRequestMiddleware"/> middleware to the specified <see cref="IApplicationBuilder"/>.
