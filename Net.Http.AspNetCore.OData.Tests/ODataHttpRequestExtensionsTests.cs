@@ -53,196 +53,196 @@ namespace Net.Http.AspNetCore.OData.Tests
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_ReturnsContext_IfMetadataIsFull()
+        public void ODataContext_ReturnsContext_IfMetadataIsFull()
         {
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData", ODataMetadataLevel.Full);
 
-            string odataContext = request.ResolveODataContext();
+            string odataContext = request.ODataContext();
 
             Assert.Equal("https://services.odata.org/OData/$metadata", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_ReturnsContext_IfMetadataIsMinimal()
+        public void ODataContext_ReturnsContext_IfMetadataIsMinimal()
         {
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData", ODataMetadataLevel.Minimal);
 
-            string odataContext = request.ResolveODataContext();
+            string odataContext = request.ODataContext();
 
             Assert.Equal("https://services.odata.org/OData/$metadata", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_ReturnsNull_IfMetadataIsNone()
+        public void ODataContext_ReturnsNull_IfMetadataIsNone()
         {
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData", ODataMetadataLevel.None);
 
-            string odataContext = request.ResolveODataContext();
+            string odataContext = request.ODataContext();
 
             Assert.Null(odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_AndEntityKey_ReturnsContext_IfMetadataIsFull()
+        public void ODataContext_WithEntitySet_AndEntityKey_ReturnsContext_IfMetadataIsFull()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')", ODataMetadataLevel.Full);
 
-            string odataContext = request.ResolveODataContext<string>(EntityDataModel.Current.EntitySets["Products"]);
+            string odataContext = request.ODataContext<string>(EntityDataModel.Current.EntitySets["Products"]);
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Products/$entity", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_AndEntityKey_ReturnsContext_IfMetadataIsMinimal()
+        public void ODataContext_WithEntitySet_AndEntityKey_ReturnsContext_IfMetadataIsMinimal()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')", ODataMetadataLevel.Minimal);
 
-            string odataContext = request.ResolveODataContext<string>(EntityDataModel.Current.EntitySets["Products"]);
+            string odataContext = request.ODataContext<string>(EntityDataModel.Current.EntitySets["Products"]);
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Products/$entity", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_AndEntityKey_ReturnsNull_IfMetadataIsNone()
+        public void ODataContext_WithEntitySet_AndEntityKey_ReturnsNull_IfMetadataIsNone()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')", ODataMetadataLevel.None);
 
-            string odataContext = request.ResolveODataContext<string>(EntityDataModel.Current.EntitySets["Products"]);
+            string odataContext = request.ODataContext<string>(EntityDataModel.Current.EntitySets["Products"]);
 
             Assert.Null(odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_AndIntEntityKey_AndProperty_ReturnsContext_IfMetadataIsFull()
+        public void ODataContext_WithEntitySet_AndIntEntityKey_AndProperty_ReturnsContext_IfMetadataIsFull()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Orders(12345)/Name", ODataMetadataLevel.Full);
 
-            string odataContext = request.ResolveODataContext(EntityDataModel.Current.EntitySets["Orders"], 12345, "Name");
+            string odataContext = request.ODataContext(EntityDataModel.Current.EntitySets["Orders"], 12345, "Name");
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Orders(12345)/Name", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_AndIntEntityKey_AndProperty_ReturnsContext_IfMetadataIsMinimal()
+        public void ODataContext_WithEntitySet_AndIntEntityKey_AndProperty_ReturnsContext_IfMetadataIsMinimal()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Orders(12345)/Name", ODataMetadataLevel.Minimal);
 
-            string odataContext = request.ResolveODataContext(EntityDataModel.Current.EntitySets["Orders"], 12345, "Name");
+            string odataContext = request.ODataContext(EntityDataModel.Current.EntitySets["Orders"], 12345, "Name");
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Orders(12345)/Name", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_AndIntEntityKey_AndProperty_ReturnsNull_IfMetadataIsNone()
+        public void ODataContext_WithEntitySet_AndIntEntityKey_AndProperty_ReturnsNull_IfMetadataIsNone()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Orders(12345)/Name", ODataMetadataLevel.None);
 
-            string odataContext = request.ResolveODataContext(EntityDataModel.Current.EntitySets["Orders"], 12345, "Name");
+            string odataContext = request.ODataContext(EntityDataModel.Current.EntitySets["Orders"], 12345, "Name");
 
             Assert.Null(odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_AndStringEntityKey_AndProperty_ReturnsContext_IfMetadataIsFull()
+        public void ODataContext_WithEntitySet_AndStringEntityKey_AndProperty_ReturnsContext_IfMetadataIsFull()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')/Name", ODataMetadataLevel.Full);
 
-            string odataContext = request.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"], "Milk", "Name");
+            string odataContext = request.ODataContext(EntityDataModel.Current.EntitySets["Products"], "Milk", "Name");
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Products('Milk')/Name", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_AndStringEntityKey_AndProperty_ReturnsContext_IfMetadataIsMinimal()
+        public void ODataContext_WithEntitySet_AndStringEntityKey_AndProperty_ReturnsContext_IfMetadataIsMinimal()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')/Name", ODataMetadataLevel.Minimal);
 
-            string odataContext = request.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"], "Milk", "Name");
+            string odataContext = request.ODataContext(EntityDataModel.Current.EntitySets["Products"], "Milk", "Name");
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Products('Milk')/Name", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_AndStringEntityKey_AndProperty_ReturnsNull_IfMetadataIsNone()
+        public void ODataContext_WithEntitySet_AndStringEntityKey_AndProperty_ReturnsNull_IfMetadataIsNone()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products('Milk')/Name", ODataMetadataLevel.None);
 
-            string odataContext = request.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"], "Milk", "Name");
+            string odataContext = request.ODataContext(EntityDataModel.Current.EntitySets["Products"], "Milk", "Name");
 
             Assert.Null(odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_ReturnsContext_IfMetadataIsFull()
+        public void ODataContext_WithEntitySet_ReturnsContext_IfMetadataIsFull()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products", ODataMetadataLevel.Full);
 
-            string odataContext = request.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"]);
+            string odataContext = request.ODataContext(EntityDataModel.Current.EntitySets["Products"]);
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Products", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_ReturnsContext_IfMetadataIsMinimal()
+        public void ODataContext_WithEntitySet_ReturnsContext_IfMetadataIsMinimal()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products", ODataMetadataLevel.Minimal);
 
-            string odataContext = request.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"]);
+            string odataContext = request.ODataContext(EntityDataModel.Current.EntitySets["Products"]);
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Products", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySet_ReturnsNull_IfMetadataIsNone()
+        public void ODataContext_WithEntitySet_ReturnsNull_IfMetadataIsNone()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products", ODataMetadataLevel.None);
 
-            string odataContext = request.ResolveODataContext(EntityDataModel.Current.EntitySets["Products"]);
+            string odataContext = request.ODataContext(EntityDataModel.Current.EntitySets["Products"]);
 
             Assert.Null(odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySetAndSelectExpandQueryOptionAll_ReturnsContext_IfMetadataIsFull()
+        public void ODataContext_WithEntitySetAndSelectExpandQueryOptionAll_ReturnsContext_IfMetadataIsFull()
         {
             TestHelper.EnsureEDM();
 
@@ -255,14 +255,14 @@ namespace Net.Http.AspNetCore.OData.Tests
                 entitySet,
                 Mock.Of<IODataQueryOptionsValidator>());
 
-            string odataContext = request.ResolveODataContext(entitySet, odataQueryOptions.Select);
+            string odataContext = request.ODataContext(entitySet, odataQueryOptions.Select);
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Products(*)", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySetAndSelectExpandQueryOptionAll_ReturnsContext_IfMetadataIsMinimal()
+        public void ODataContext_WithEntitySetAndSelectExpandQueryOptionAll_ReturnsContext_IfMetadataIsMinimal()
         {
             TestHelper.EnsureEDM();
 
@@ -275,14 +275,14 @@ namespace Net.Http.AspNetCore.OData.Tests
                 entitySet,
                 Mock.Of<IODataQueryOptionsValidator>());
 
-            string odataContext = request.ResolveODataContext(entitySet, odataQueryOptions.Select);
+            string odataContext = request.ODataContext(entitySet, odataQueryOptions.Select);
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Products(*)", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySetAndSelectExpandQueryOptionAll_ReturnsNull_IfMetadataIsNone()
+        public void ODataContext_WithEntitySetAndSelectExpandQueryOptionAll_ReturnsNull_IfMetadataIsNone()
         {
             TestHelper.EnsureEDM();
 
@@ -295,14 +295,14 @@ namespace Net.Http.AspNetCore.OData.Tests
                 entitySet,
                 Mock.Of<IODataQueryOptionsValidator>());
 
-            string odataContext = request.ResolveODataContext(entitySet, odataQueryOptions.Select);
+            string odataContext = request.ODataContext(entitySet, odataQueryOptions.Select);
 
             Assert.Null(odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySetAndSelectExpandQueryOptionProperties_ReturnsContext_IfMetadataIsFull()
+        public void ODataContext_WithEntitySetAndSelectExpandQueryOptionProperties_ReturnsContext_IfMetadataIsFull()
         {
             TestHelper.EnsureEDM();
 
@@ -315,14 +315,14 @@ namespace Net.Http.AspNetCore.OData.Tests
                 entitySet,
                 Mock.Of<IODataQueryOptionsValidator>());
 
-            string odataContext = request.ResolveODataContext(entitySet, odataQueryOptions.Select);
+            string odataContext = request.ODataContext(entitySet, odataQueryOptions.Select);
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Products(Name,Price)", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySetAndSelectExpandQueryOptionProperties_ReturnsContext_IfMetadataIsMinimal()
+        public void ODataContext_WithEntitySetAndSelectExpandQueryOptionProperties_ReturnsContext_IfMetadataIsMinimal()
         {
             TestHelper.EnsureEDM();
 
@@ -335,14 +335,14 @@ namespace Net.Http.AspNetCore.OData.Tests
                 entitySet,
                 Mock.Of<IODataQueryOptionsValidator>());
 
-            string odataContext = request.ResolveODataContext(entitySet, odataQueryOptions.Select);
+            string odataContext = request.ODataContext(entitySet, odataQueryOptions.Select);
 
             Assert.Equal("https://services.odata.org/OData/$metadata#Products(Name,Price)", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataContext_WithEntitySetAndSelectExpandQueryOptionProperties_ReturnsNull_IfMetadataIsNone()
+        public void ODataContext_WithEntitySetAndSelectExpandQueryOptionProperties_ReturnsNull_IfMetadataIsNone()
         {
             TestHelper.EnsureEDM();
 
@@ -355,40 +355,40 @@ namespace Net.Http.AspNetCore.OData.Tests
                 entitySet,
                 Mock.Of<IODataQueryOptionsValidator>());
 
-            string odataContext = request.ResolveODataContext(entitySet, odataQueryOptions.Select);
+            string odataContext = request.ODataContext(entitySet, odataQueryOptions.Select);
 
             Assert.Null(odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataId_WithIntEntityKey()
+        public void ODataId_WithIntEntityKey()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Orders");
 
-            string odataContext = request.ResolveODataId(EntityDataModel.Current.EntitySets["Orders"], 12345);
+            string odataContext = request.ODataId(EntityDataModel.Current.EntitySets["Orders"], 12345);
 
             Assert.Equal("https://services.odata.org/OData/Orders(12345)", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataId_WithStringEntityKey()
+        public void ODataId_WithStringEntityKey()
         {
             TestHelper.EnsureEDM();
 
             HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products");
 
-            string odataContext = request.ResolveODataId(EntityDataModel.Current.EntitySets["Products"], "Milk");
+            string odataContext = request.ODataId(EntityDataModel.Current.EntitySets["Products"], "Milk");
 
             Assert.Equal("https://services.odata.org/OData/Products('Milk')", odataContext);
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataNextLink_WithAllQueryOptions()
+        public void ODataNextLink_WithAllQueryOptions()
         {
             TestHelper.EnsureEDM();
 
@@ -402,12 +402,12 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             Assert.Equal(
                 "https://services.odata.org/OData/Products?$skip=75&$count=true&$expand=Category&$filter=Name eq 'Milk'&$format=json&$orderby=Name&$search=blue OR green&$select=Name,Price&$top=25",
-                request.ResolveODataNextLink(queryOptions, 50, 25));
+                request.ODataNextLink(queryOptions, 50, 25));
         }
 
         [Fact]
         [Trait("Category", "Unit")]
-        public void ResolveODataNextLink_WithTopQueryOption()
+        public void ODataNextLink_WithTopQueryOption()
         {
             TestHelper.EnsureEDM();
 
@@ -420,7 +420,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             Assert.Equal(
                 "https://services.odata.org/OData/Products?$skip=25&$top=25",
-                request.ResolveODataNextLink(queryOptions, 0, 25));
+                request.ODataNextLink(queryOptions, 0, 25));
         }
     }
 }

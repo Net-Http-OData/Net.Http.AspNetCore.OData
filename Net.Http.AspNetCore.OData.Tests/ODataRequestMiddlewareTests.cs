@@ -179,7 +179,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
         public class WhenCalling_InvokeAsync_AndTheResponseHasNoContent
         {
-            private readonly HttpResponse _httpResponse;
+            private readonly HttpResponse _response;
 
             public WhenCalling_InvokeAsync_AndTheResponseHasNoContent()
             {
@@ -190,7 +190,7 @@ namespace Net.Http.AspNetCore.OData.Tests
                 var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
                 middleware.InvokeAsync(httpContext).Wait();
 
-                _httpResponse = httpContext.Response;
+                _response = httpContext.Response;
             }
 
             [Fact]
@@ -198,7 +198,7 @@ namespace Net.Http.AspNetCore.OData.Tests
             public void TheMetadataLevelContentTypeParameterIsSetInTheResponse()
             {
                 NameValueHeaderValue metadataParameter =
-                    new ResponseHeaders(_httpResponse.Headers).ContentType.Parameters.SingleOrDefault(x => x.Name == ODataMetadataLevelExtensions.HeaderName);
+                    new ResponseHeaders(_response.Headers).ContentType.Parameters.SingleOrDefault(x => x.Name == ODataMetadataLevelExtensions.HeaderName);
 
                 Assert.NotNull(metadataParameter);
                 Assert.Equal("minimal", metadataParameter.Value);
@@ -208,15 +208,15 @@ namespace Net.Http.AspNetCore.OData.Tests
             [Trait("Category", "Unit")]
             public void TheODataVersionHeaderIsSetInTheResponse()
             {
-                Assert.True(_httpResponse.Headers.TryGetValue(ODataResponseHeaderNames.ODataVersion, out StringValues value));
+                Assert.True(_response.Headers.TryGetValue(ODataResponseHeaderNames.ODataVersion, out StringValues value));
                 Assert.Equal(ODataVersion.MaxVersion.ToString(), value);
             }
         }
 
         public class WhenCalling_InvokeAsync_WithAnODataUri_AndAllRequestOptionsInRequest
         {
-            private readonly HttpResponse _httpResponse;
             private readonly ODataRequestOptions _odataRequestOptions;
+            private readonly HttpResponse _response;
 
             public WhenCalling_InvokeAsync_WithAnODataUri_AndAllRequestOptionsInRequest()
             {
@@ -237,9 +237,9 @@ namespace Net.Http.AspNetCore.OData.Tests
                 var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, odataServiceOptions);
                 middleware.InvokeAsync(httpContext).Wait();
 
-                _httpResponse = httpContext.Response;
+                _response = httpContext.Response;
 
-                _httpResponse.HttpContext.Items.TryGetValue(typeof(ODataRequestOptions).FullName, out object odataRequestOptions);
+                _response.HttpContext.Items.TryGetValue(typeof(ODataRequestOptions).FullName, out object odataRequestOptions);
                 _odataRequestOptions = odataRequestOptions as ODataRequestOptions;
             }
 
@@ -278,7 +278,7 @@ namespace Net.Http.AspNetCore.OData.Tests
             public void TheMetadataLevelContentTypeParameterIsSetInTheResponse()
             {
                 NameValueHeaderValue metadataParameter =
-                    new ResponseHeaders(_httpResponse.Headers).ContentType.Parameters.SingleOrDefault(x => x.Name == ODataMetadataLevelExtensions.HeaderName);
+                    new ResponseHeaders(_response.Headers).ContentType.Parameters.SingleOrDefault(x => x.Name == ODataMetadataLevelExtensions.HeaderName);
 
                 Assert.NotNull(metadataParameter);
                 Assert.Equal("none", metadataParameter.Value);
@@ -288,15 +288,15 @@ namespace Net.Http.AspNetCore.OData.Tests
             [Trait("Category", "Unit")]
             public void TheODataVersionHeaderIsSetInTheResponse()
             {
-                Assert.True(_httpResponse.Headers.TryGetValue(ODataResponseHeaderNames.ODataVersion, out StringValues headerValue));
+                Assert.True(_response.Headers.TryGetValue(ODataResponseHeaderNames.ODataVersion, out StringValues headerValue));
                 Assert.Equal(ODataVersion.OData40.ToString(), headerValue);
             }
         }
 
         public class WhenCalling_InvokeAsync_WithAnODataUri_AndNoRequestOptionsInRequest
         {
-            private readonly HttpResponse _httpResponse;
             private readonly ODataRequestOptions _odataRequestOptions;
+            private readonly HttpResponse _response;
 
             public WhenCalling_InvokeAsync_WithAnODataUri_AndNoRequestOptionsInRequest()
             {
@@ -307,9 +307,9 @@ namespace Net.Http.AspNetCore.OData.Tests
                 var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
                 middleware.InvokeAsync(httpContext).Wait();
 
-                _httpResponse = httpContext.Response;
+                _response = httpContext.Response;
 
-                _httpResponse.HttpContext.Items.TryGetValue(typeof(ODataRequestOptions).FullName, out object odataRequestOptions);
+                _response.HttpContext.Items.TryGetValue(typeof(ODataRequestOptions).FullName, out object odataRequestOptions);
                 _odataRequestOptions = odataRequestOptions as ODataRequestOptions;
             }
 
@@ -348,7 +348,7 @@ namespace Net.Http.AspNetCore.OData.Tests
             public void TheMetadataLevelContentTypeParameterIsSetInTheResponse()
             {
                 NameValueHeaderValue metadataParameter =
-                    new ResponseHeaders(_httpResponse.Headers).ContentType.Parameters.SingleOrDefault(x => x.Name == ODataMetadataLevelExtensions.HeaderName);
+                    new ResponseHeaders(_response.Headers).ContentType.Parameters.SingleOrDefault(x => x.Name == ODataMetadataLevelExtensions.HeaderName);
 
                 Assert.NotNull(metadataParameter);
                 Assert.Equal("minimal", metadataParameter.Value);
@@ -358,14 +358,14 @@ namespace Net.Http.AspNetCore.OData.Tests
             [Trait("Category", "Unit")]
             public void TheODataVersionHeaderIsSetInTheResponse()
             {
-                Assert.True(_httpResponse.Headers.TryGetValue(ODataResponseHeaderNames.ODataVersion, out StringValues headerValue));
+                Assert.True(_response.Headers.TryGetValue(ODataResponseHeaderNames.ODataVersion, out StringValues headerValue));
                 Assert.Equal(ODataVersion.MaxVersion.ToString(), headerValue);
             }
         }
 
         public class WhenCalling_InvokeAsync_WithoutAnODataUri
         {
-            private readonly HttpResponse _httpResponse;
+            private readonly HttpResponse _response;
 
             public WhenCalling_InvokeAsync_WithoutAnODataUri()
             {
@@ -376,26 +376,26 @@ namespace Net.Http.AspNetCore.OData.Tests
                 var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
                 middleware.InvokeAsync(httpContext).Wait();
 
-                _httpResponse = httpContext.Response;
+                _response = httpContext.Response;
             }
 
             [Fact]
             [Trait("Category", "Unit")]
             public void RequestParameters_DoesNotContainsODataRequestOptions()
             {
-                Assert.False(_httpResponse.HttpContext.Items.TryGetValue(typeof(ODataRequestOptions).FullName, out object odataRequestOptions));
+                Assert.False(_response.HttpContext.Items.TryGetValue(typeof(ODataRequestOptions).FullName, out object odataRequestOptions));
                 Assert.Null(odataRequestOptions);
             }
 
             [Fact]
             [Trait("Category", "Unit")]
             public void TheMetadataLevelContentTypeParameterIsNotSet()
-                => Assert.DoesNotContain(new ResponseHeaders(_httpResponse.Headers).ContentType.Parameters, x => x.Name == ODataMetadataLevelExtensions.HeaderName);
+                => Assert.DoesNotContain(new ResponseHeaders(_response.Headers).ContentType.Parameters, x => x.Name == ODataMetadataLevelExtensions.HeaderName);
 
             [Fact]
             [Trait("Category", "Unit")]
             public void TheODataVersionHeaderIsNotSet()
-                => Assert.False(_httpResponse.Headers.ContainsKey(ODataResponseHeaderNames.ODataVersion));
+                => Assert.False(_response.Headers.ContainsKey(ODataResponseHeaderNames.ODataVersion));
         }
     }
 }
