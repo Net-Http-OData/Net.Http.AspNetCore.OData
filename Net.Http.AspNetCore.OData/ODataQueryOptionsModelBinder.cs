@@ -38,7 +38,7 @@ namespace Net.Http.AspNetCore.OData
                 string query = request.QueryString.HasValue ? request.QueryString.Value : string.Empty;
                 EntitySet entitySet = request.ResolveEntitySet();
                 ODataRequestOptions odataRequestOptions = request.ReadODataRequestOptions();
-                IODataQueryOptionsValidator validator = ODataQueryOptionsValidator.GetValidator(odataRequestOptions.Version);
+                IODataQueryOptionsValidator validator = ODataQueryOptionsValidator.GetValidator(odataRequestOptions.ODataVersion);
 
                 var queryOptions = new ODataQueryOptions(query, entitySet, validator);
 

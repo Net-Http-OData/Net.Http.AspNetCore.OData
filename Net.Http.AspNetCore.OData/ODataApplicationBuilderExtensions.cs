@@ -21,7 +21,7 @@ namespace Net.Http.AspNetCore.OData
     public static class ODataApplicationBuilderExtensions
     {
         /// <summary>
-        /// Adds a <see cref="ODataRequestMiddleware"/> middleware to the specified <see cref="IApplicationBuilder"/>.
+        /// Adds an <see cref="ODataRequestMiddleware"/> middleware to the specified <see cref="IApplicationBuilder"/>.
         /// </summary>
         /// <param name="builder">The <see cref="IApplicationBuilder"/> to add the middleware to.</param>
         /// <returns>The <see cref="IApplicationBuilder"/> with the added <see cref="ODataRequestMiddleware"/>.</returns>

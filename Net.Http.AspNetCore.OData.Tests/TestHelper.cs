@@ -55,10 +55,12 @@ namespace Net.Http.AspNetCore.OData.Tests
         /// <returns>The HttpRequest</returns>
         internal static HttpRequest CreateODataHttpRequest(string pathAndQuery, ODataMetadataLevel metadataLevel = ODataMetadataLevel.Minimal)
         {
-            HttpRequest httpRequest = CreateHttpRequest(pathAndQuery);
-            httpRequest.HttpContext.Items.Add(typeof(ODataRequestOptions).FullName, new ODataRequestOptions(new Uri("https://services.odata.org/OData/"), ODataIsolationLevel.None, metadataLevel, ODataVersion.OData40));
+            HttpRequest request = CreateHttpRequest(pathAndQuery);
+            request.HttpContext.Items.Add(
+                typeof(ODataRequestOptions).FullName,
+                new ODataRequestOptions(new Uri("https://services.odata.org/OData/"), ODataIsolationLevel.None, metadataLevel, ODataVersion.OData40, ODataVersion.OData40));
 
-            return httpRequest;
+            return request;
         }
 
         internal static void EnsureEDM()

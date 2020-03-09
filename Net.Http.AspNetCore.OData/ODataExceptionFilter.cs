@@ -10,6 +10,7 @@
 //
 // </copyright>
 // -----------------------------------------------------------------------
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Net.Http.OData;
 
@@ -28,7 +29,7 @@ namespace Net.Http.AspNetCore.OData
         {
             if (context?.Exception is ODataException odataException)
             {
-                context.Result = context.HttpContext.Request.CreateODataErrorResult(odataException);
+                context.Result = new ObjectResult(odataException.ToODataErrorContent()) { StatusCode = (int)odataException.StatusCode };
                 context.ExceptionHandled = true;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,11 +15,11 @@ namespace Net.Http.AspNetCore.OData.Tests
         [Fact]
         public void OnException_DoesNotSet_Result_If_Exception_IsNot_ODataException()
         {
-            var httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products");
+            HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products");
 
-            var exceptionContext = new ExceptionContext(new ActionContext(httpRequest.HttpContext, new RouteData(), new ActionDescriptor()), new IFilterMetadata[0])
+            var exceptionContext = new ExceptionContext(new ActionContext(request.HttpContext, new RouteData(), new ActionDescriptor()), new IFilterMetadata[0])
             {
-                HttpContext = httpRequest.HttpContext,
+                HttpContext = request.HttpContext,
                 Exception = new ArgumentNullException("Name"),
             };
 
@@ -32,11 +33,11 @@ namespace Net.Http.AspNetCore.OData.Tests
         [Fact]
         public void OnException_Sets_Result_If_Exception_Is_ODataException()
         {
-            var httpRequest = TestHelper.CreateODataHttpRequest("/OData/Products");
+            HttpRequest request = TestHelper.CreateODataHttpRequest("/OData/Products");
 
-            var exceptionContext = new ExceptionContext(new ActionContext(httpRequest.HttpContext, new RouteData(), new ActionDescriptor()), new IFilterMetadata[0])
+            var exceptionContext = new ExceptionContext(new ActionContext(request.HttpContext, new RouteData(), new ActionDescriptor()), new IFilterMetadata[0])
             {
-                HttpContext = httpRequest.HttpContext,
+                HttpContext = request.HttpContext,
                 Exception = new ODataException("The type 'NorthwindModel.Product' does not contain a property named 'Foo'", HttpStatusCode.BadRequest),
             };
 
