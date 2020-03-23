@@ -12,9 +12,11 @@
 // -----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
 using Net.Http.AspNetCore.OData;
 using Net.Http.OData.Model;
+using Net.Http.OData.Query.Parsers;
 
 namespace Microsoft.AspNetCore.Mvc
 {
@@ -24,24 +26,41 @@ namespace Microsoft.AspNetCore.Mvc
     public static class ODataServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds OData services with the specified Entity Data Model with <see cref="StringComparer"/>.OrdinalIgnoreCase for the model name matching.
+        /// Adds OData services with the specified Entity Data Model with <see cref="DateTimeStyles.AssumeUniversal"/>
+        /// for parsing <see cref="DateTimeOffset"/>s, and <see cref="StringComparer"/>.OrdinalIgnoreCase for the model name matching.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
         /// <param name="entityDataModelBuilderCallback">The call-back to configure the Entity Data Model.</param>
         public static void AddOData(
             this IServiceCollection services,
             Action<EntityDataModelBuilder> entityDataModelBuilderCallback)
-            => AddOData(services, entityDataModelBuilderCallback, StringComparer.OrdinalIgnoreCase);
+            => AddOData(services, entityDataModelBuilderCallback, ParserSettings.DateTimeStyles);
 
         /// <summary>
-        /// Adds OData services with the specified Entity Data Model and equality comparer for the model name matching.
+        /// Adds OData services with the specified Entity Data Model with the specified <see cref="DateTimeStyles"/>
+        /// for parsing <see cref="DateTimeOffset"/>s, and <see cref="StringComparer"/>.OrdinalIgnoreCase for the model name matching.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
         /// <param name="entityDataModelBuilderCallback">The call-back to configure the Entity Data Model.</param>
+        /// <param name="dateTimeOffsetParserStyle">The <see cref="DateTimeStyles"/> to use for parsing <see cref="DateTimeOffset"/> if no timezone is specified in the OData query.</param>
+        public static void AddOData(
+            this IServiceCollection services,
+            Action<EntityDataModelBuilder> entityDataModelBuilderCallback,
+            DateTimeStyles dateTimeOffsetParserStyle)
+            => AddOData(services, entityDataModelBuilderCallback, dateTimeOffsetParserStyle, StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Adds OData services with the specified Entity Data Model with the specified <see cref="DateTimeStyles"/>
+        /// for parsing <see cref="DateTimeOffset"/>s, and <see cref="IEqualityComparer{T}"/> for the model name matching.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
+        /// <param name="entityDataModelBuilderCallback">The call-back to configure the Entity Data Model.</param>
+        /// <param name="dateTimeOffsetParserStyle">The <see cref="DateTimeStyles"/> to use for parsing <see cref="DateTimeOffset"/> if no timezone is specified in the OData query.</param>
         /// <param name="entitySetNameComparer">The comparer to use for the entty set name matching.</param>
         public static void AddOData(
             this IServiceCollection services,
             Action<EntityDataModelBuilder> entityDataModelBuilderCallback,
+            DateTimeStyles dateTimeOffsetParserStyle,
             IEqualityComparer<string> entitySetNameComparer)
         {
             if (services is null)
@@ -60,6 +79,8 @@ namespace Microsoft.AspNetCore.Mvc
 
                 options.ModelBinderProviders.Insert(0, new ODataQueryOptionsModelBinderProvider());
             });
+
+            ParserSettings.DateTimeStyles = dateTimeOffsetParserStyle;
 
             var entityDataModelBuilder = new EntityDataModelBuilder(entitySetNameComparer);
             entityDataModelBuilderCallback(entityDataModelBuilder);

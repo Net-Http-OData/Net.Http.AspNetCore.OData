@@ -12,8 +12,12 @@
 // -----------------------------------------------------------------------
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Headers;
+using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 using Net.Http.OData;
 using Net.Http.OData.Model;
 using Net.Http.OData.Query;
@@ -270,5 +274,117 @@ namespace Net.Http.AspNetCore.OData
         /// <returns>The OData request options for the request.</returns>
         public static ODataRequestOptions ODataRequestOptions(this HttpRequest request)
             => request?.HttpContext.Items[typeof(ODataRequestOptions).FullName] as ODataRequestOptions;
+
+        internal static ODataIsolationLevel ReadIsolationLevel(this HttpRequest request)
+        {
+            string headerValue = ReadHeaderValue(request, ODataRequestHeaderNames.ODataIsolation);
+
+            if (headerValue != null)
+            {
+                if (headerValue == "Snapshot")
+                {
+                    return ODataIsolationLevel.Snapshot;
+                }
+
+                throw ODataException.BadRequest($"If specified, the {ODataRequestHeaderNames.ODataIsolation} must be 'Snapshot'.");
+            }
+
+            return ODataIsolationLevel.None;
+        }
+
+        internal static ODataMetadataLevel ReadMetadataLevel(this HttpRequest request)
+        {
+            if (request.Query.TryGetValue("$format", out StringValues formatQueryString))
+            {
+                foreach (string formatQueryParameters in formatQueryString)
+                {
+                    foreach (string formatQuery in formatQueryParameters.Split(';'))
+                    {
+                        if (formatQuery.StartsWith("odata.metadata=", StringComparison.Ordinal))
+                        {
+                            switch (formatQuery)
+                            {
+                                case "odata.metadata=none":
+                                    return ODataMetadataLevel.None;
+
+                                case "odata.metadata=minimal":
+                                    return ODataMetadataLevel.Minimal;
+
+                                case "odata.metadata=full":
+                                    return ODataMetadataLevel.Full;
+
+                                default:
+                                    throw ODataException.BadRequest(
+                                        $"If specified, the {ODataMetadataLevelExtensions.HeaderName} value in the $format query option must be 'none', 'minimal' or 'full'.");
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (MediaTypeHeaderValue header in new RequestHeaders(request.Headers).Accept)
+            {
+                foreach (NameValueHeaderValue parameter in header.Parameters)
+                {
+                    if (parameter.Name == ODataMetadataLevelExtensions.HeaderName)
+                    {
+                        switch (parameter.Value.Value)
+                        {
+                            case "none":
+                                return ODataMetadataLevel.None;
+
+                            case "minimal":
+                                return ODataMetadataLevel.Minimal;
+
+                            case "full":
+                                return ODataMetadataLevel.Full;
+
+                            default:
+                                throw ODataException.BadRequest(
+                                    $"If specified, the {ODataMetadataLevelExtensions.HeaderName} value in the Accept header must be 'none', 'minimal' or 'full'.");
+                        }
+                    }
+                }
+            }
+
+            return ODataMetadataLevel.Minimal;
+        }
+
+        internal static ODataVersion ReadODataMaxVersion(this HttpRequest request)
+        {
+            string headerValue = ReadHeaderValue(request, ODataRequestHeaderNames.ODataMaxVersion);
+
+            if (headerValue != null)
+            {
+                if (ODataVersion.TryParse(headerValue, out ODataVersion odataVersion))
+                {
+                    return odataVersion;
+                }
+
+                throw ODataException.BadRequest($"If specified, the {ODataRequestHeaderNames.ODataMaxVersion} header must be a valid OData version.");
+            }
+
+            return ODataVersion.MaxVersion;
+        }
+
+        internal static ODataVersion ReadODataVersion(this HttpRequest request)
+        {
+            string headerValue = ReadHeaderValue(request, ODataRequestHeaderNames.ODataVersion);
+
+            if (headerValue != null)
+            {
+                if (ODataVersion.TryParse(headerValue, out ODataVersion odataVersion))
+                {
+                    return odataVersion;
+                }
+
+                throw ODataException.BadRequest($"If specified, the {ODataRequestHeaderNames.ODataMaxVersion} header must be a valid OData version.");
+            }
+
+            return ReadODataMaxVersion(request);
+        }
+
+        private static string ReadHeaderValue(HttpRequest request, string name)
+            => request.Headers.TryGetValue(name, out StringValues values) ? values.FirstOrDefault() : default;
     }
 }

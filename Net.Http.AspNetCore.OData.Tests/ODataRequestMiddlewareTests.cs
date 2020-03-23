@@ -17,7 +17,7 @@ namespace Net.Http.AspNetCore.OData.Tests
     {
         [Fact]
         [Trait("Category", "Unit")]
-        public async Task DoesNotAdd_MetadataLevel_ForMetadataRequest()
+        public async Task InvokeAsync_DoesNotAdd_MetadataLevel_ForMetadataRequest()
         {
             HttpRequest request = TestHelper.CreateHttpRequest("/OData/$metadata");
 
@@ -107,7 +107,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
         [Fact]
         [Trait("Category", "Unit")]
-        public async Task InvokeAsync_ReturnsODataErrorContent_ForInvalidMetadataLevel()
+        public async Task InvokeAsync_ReturnsODataErrorContent_ForInvalidMetadataLevel_InAccept()
         {
             HttpRequest request = TestHelper.CreateHttpRequest("/OData/Products");
             request.Headers["Accept"] = "application/json;odata.metadata=all";
@@ -127,6 +127,29 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             Assert.Equal("400", odataErrorContent.Error.Code);
             Assert.Equal("If specified, the odata.metadata value in the Accept header must be 'none', 'minimal' or 'full'.", odataErrorContent.Error.Message);
+        }
+
+        [Fact]
+        [Trait("Category", "Unit")]
+        public async Task InvokeAsync_ReturnsODataErrorContent_ForInvalidMetadataLevel_InFormatQueryOption()
+        {
+            HttpRequest request = TestHelper.CreateHttpRequest("/OData/Products?$format=application/json;odata.metadata=all");
+
+            HttpContext httpContext = request.HttpContext;
+
+            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
+            await middleware.InvokeAsync(httpContext);
+
+            Assert.Equal((int)HttpStatusCode.BadRequest, httpContext.Response.StatusCode);
+
+            httpContext.Response.Body.Position = 0;
+
+            string bodyResult = new StreamReader(httpContext.Response.Body, Encoding.UTF8).ReadToEnd();
+
+            ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
+
+            Assert.Equal("400", odataErrorContent.Error.Code);
+            Assert.Equal("If specified, the odata.metadata value in the $format query option must be 'none', 'minimal' or 'full'.", odataErrorContent.Error.Message);
         }
 
         [Fact]
@@ -155,10 +178,33 @@ namespace Net.Http.AspNetCore.OData.Tests
 
         [Fact]
         [Trait("Category", "Unit")]
-        public async Task InvokeAsync_ReturnsODataErrorContent_ForMetadataLevelFull()
+        public async Task InvokeAsync_ReturnsODataErrorContent_ForMetadataLevelFull_InAccept()
         {
             HttpRequest request = TestHelper.CreateHttpRequest("/OData/Products");
             request.Headers["Accept"] = "application/json;odata.metadata=full";
+
+            HttpContext httpContext = request.HttpContext;
+
+            var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
+            await middleware.InvokeAsync(httpContext);
+
+            Assert.Equal((int)HttpStatusCode.BadRequest, httpContext.Response.StatusCode);
+
+            httpContext.Response.Body.Position = 0;
+
+            string bodyResult = new StreamReader(httpContext.Response.Body, Encoding.UTF8).ReadToEnd();
+
+            ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
+
+            Assert.Equal("400", odataErrorContent.Error.Code);
+            Assert.Equal("odata.metadata 'full' is not supported by this service, the metadata levels supported by this service are 'none, minimal'.", odataErrorContent.Error.Message);
+        }
+
+        [Fact]
+        [Trait("Category", "Unit")]
+        public async Task InvokeAsync_ReturnsODataErrorContent_ForMetadataLevelFull_InFormatQueryOption()
+        {
+            HttpRequest request = TestHelper.CreateHttpRequest("/OData/Products?$format=application/json;odata.metadata=full");
 
             HttpContext httpContext = request.HttpContext;
 
