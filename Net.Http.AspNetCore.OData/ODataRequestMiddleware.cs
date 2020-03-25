@@ -95,7 +95,7 @@ namespace Net.Http.AspNetCore.OData
                 if (!httpContext.Request.IsODataMetadataRequest())
                 {
 #pragma warning disable CA1308 // Normalize strings to uppercase
-                    // TODO: verify this is the correct way to do this...
+                    // TODO: verify this is the correct way to do this, if it is, do we need ODataMetadataLevelExtensions?
                     httpContext.Response.Headers["Content-Type"] += ";odata.metadata=" + requestOptions.MetadataLevel.ToString().ToLowerInvariant();
 #pragma warning restore CA1308 // Normalize strings to uppercase
                 }
