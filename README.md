@@ -1,14 +1,13 @@
-Net.Http.AspNetCore.OData
-=========================
-
-|Service|Status|
-|-------|------|
-||![Nuget](https://img.shields.io/nuget/dt/Net.Http.AspNetCore.OData)![Nuget(with prereleases)](https://img.shields.io/nuget/vpre/Net.Http.AspNetCore.OData)![Nuget](https://img.shields.io/nuget/v/Net.Http.AspNetCore.OData)|
-|/develop|[![Build Status](https://dev.azure.com/trevorpilley/Net.Http.OData/_apis/build/status/Net-Http-OData.Net.Http.AspNetCore.OData?branchName=develop)](https://dev.azure.com/trevorpilley/Net.Http.OData/_build/latest?definitionId=27&branchName=develop)|
-|/master|[![Build Status](https://dev.azure.com/trevorpilley/Net.Http.OData/_apis/build/status/Net-Http-OData.Net.Http.AspNetCore.OData?branchName=master)](https://dev.azure.com/trevorpilley/Net.Http.OData/_build/latest?definitionId=27&branchName=master)|
-||![GitHub last commit](https://img.shields.io/github/last-commit/Net-Http-OData/Net.Http.AspNetCore.OData) ![GitHub Release Date](https://img.shields.io/github/release-date/Net-Http-OData/Net.Http.AspNetCore.OData)|
+# Net.Http.AspNetCore.OData
 
 Net.Http.AspNetCore.OData is a .NET Standard 2.0 library which uses [Net.Http.OData](https://github.com/Net-Http-OData/Net.Http.OData) with an implementation for ASP.NET Core.
+
+![Nuget](https://img.shields.io/nuget/dt/Net.Http.AspNetCore.OData)
+
+|Branch|Status|
+|------|------|
+|/develop|![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Net-Http-OData/Net.Http.AspNetCore.OData/develop) [![Build Status](https://dev.azure.com/trevorpilley/Net.Http.OData/_apis/build/status/Net-Http-OData.Net.Http.AspNetCore.OData?branchName=develop)](https://dev.azure.com/trevorpilley/Net.Http.OData/_build/latest?definitionId=27&branchName=develop) ![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/Net.Http.AspNetCore.OData)|
+|/master|![GitHub last commit](https://img.shields.io/github/last-commit/Net-Http-OData/Net.Http.AspNetCore.OData/master) [![Build Status](https://dev.azure.com/trevorpilley/Net.Http.OData/_apis/build/status/Net-Http-OData.Net.Http.AspNetCore.OData?branchName=master)](https://dev.azure.com/trevorpilley/Net.Http.OData/_build/latest?definitionId=27&branchName=master) ![Nuget](https://img.shields.io/nuget/v/Net.Http.AspNetCore.OData) ![GitHub Release Date](https://img.shields.io/github/release-date/Net-Http-OData/Net.Http.AspNetCore.OData)|
 
 ## Installation
 
