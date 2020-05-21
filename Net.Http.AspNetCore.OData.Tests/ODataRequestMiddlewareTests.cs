@@ -44,7 +44,7 @@ namespace Net.Http.AspNetCore.OData.Tests
             var middleware = new ODataRequestMiddleware((HttpContext context) => Task.CompletedTask, TestHelper.ODataServiceOptions);
             await middleware.InvokeAsync(httpContext);
 
-            Assert.Equal((int)HttpStatusCode.UnsupportedMediaType, httpContext.Response.StatusCode);
+            Assert.Equal((int)HttpStatusCode.NotAcceptable, httpContext.Response.StatusCode);
 
             httpContext.Response.Body.Position = 0;
 
@@ -52,7 +52,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             ODataErrorContent odataErrorContent = JsonSerializer.Deserialize<ODataErrorContent>(bodyResult, TestHelper.JsonSerializerOptions);
 
-            Assert.Equal("415", odataErrorContent.Error.Code);
+            Assert.Equal("406", odataErrorContent.Error.Code);
             Assert.Equal("A supported MIME type could not be found that matches the acceptable MIME types for the request. The supported type(s) 'application/json;odata.metadata=none, application/json;odata.metadata=minimal, application/json, text/plain' do not match any of the acceptable MIME types 'application/xml'.", odataErrorContent.Error.Message);
         }
 

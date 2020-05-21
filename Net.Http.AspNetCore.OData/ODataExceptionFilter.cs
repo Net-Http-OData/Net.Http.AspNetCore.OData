@@ -30,6 +30,7 @@ namespace Net.Http.AspNetCore.OData
             if (context?.Exception is ODataException odataException)
             {
                 context.Result = new ObjectResult(odataException.ToODataErrorContent()) { StatusCode = (int)odataException.StatusCode };
+                context.HttpContext.Response.Headers.Add("Content-Language", "en-GB");
                 context.ExceptionHandled = true;
             }
         }

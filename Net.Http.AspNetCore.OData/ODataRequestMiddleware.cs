@@ -78,6 +78,7 @@ namespace Net.Http.AspNetCore.OData
                 }
                 catch (ODataException exception)
                 {
+                    httpContext.Response.Headers.Add("Content-Language", "en-GB");
                     httpContext.Response.ContentType = "application/json";
                     httpContext.Response.StatusCode = (int)exception.StatusCode;
 

@@ -38,6 +38,8 @@ namespace Net.Http.AspNetCore.OData.Metadata
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Get()
         {
+            // TODO: check content type and if not blank or application/xml return 406 NOT ACCEPTABLE?
+
             EnsureMetadata();
 
             return Content(s_metadataXml, "application/xml", Encoding.UTF8);
