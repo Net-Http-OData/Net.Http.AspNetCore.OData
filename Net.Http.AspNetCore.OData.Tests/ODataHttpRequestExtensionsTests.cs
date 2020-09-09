@@ -454,6 +454,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             Assert.Equal($"If specified, the {ODataRequestHeaderNames.ODataIsolation} must be 'Snapshot'.", exception.Message);
             Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
+            Assert.Equal(ODataRequestHeaderNames.ODataIsolation, exception.Target);
         }
 
         [Fact]
@@ -507,6 +508,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             Assert.Equal($"If specified, the {ODataMetadataLevelExtensions.HeaderName} value in the Accept header must be 'none', 'minimal' or 'full'.", exception.Message);
             Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
+            Assert.Equal(ODataMetadataLevelExtensions.HeaderName, exception.Target);
         }
 
         [Fact]
@@ -546,6 +548,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             Assert.Equal($"If specified, the {ODataMetadataLevelExtensions.HeaderName} value in the $format query option must be 'none', 'minimal' or 'full'.", exception.Message);
             Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
+            Assert.Equal(ODataMetadataLevelExtensions.HeaderName, exception.Target);
         }
 
         [Fact]
@@ -578,6 +581,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             Assert.Equal($"If specified, the {ODataRequestHeaderNames.ODataMaxVersion} header must be a valid OData version.", exception.Message);
             Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
+            Assert.Equal(ODataRequestHeaderNames.ODataMaxVersion, exception.Target);
         }
 
         [Fact]
@@ -611,6 +615,7 @@ namespace Net.Http.AspNetCore.OData.Tests
 
             Assert.Equal($"If specified, the {ODataRequestHeaderNames.ODataMaxVersion} header must be a valid OData version.", exception.Message);
             Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
+            Assert.Equal(ODataRequestHeaderNames.ODataMaxVersion,exception.Target);
         }
     }
 }
